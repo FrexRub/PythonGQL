@@ -1,5 +1,6 @@
 from typing import List
 import strawberry
+from strawberry.fastapi import GraphQLRouter
 
 from .schemas import Task
 from .resolvers import QueryResolver, MutationResolver
@@ -17,3 +18,7 @@ class Mutation:
     update_task: (Task | None) = strawberry.field(
         resolver=MutationResolver.update_task)
     delete_task = strawberry.field(resolver=MutationResolver.delete_task)
+
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
+graphql_app = GraphQLRouter(schema)

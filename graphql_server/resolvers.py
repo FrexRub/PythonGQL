@@ -18,7 +18,7 @@ class QueryResolver:
 
 class MutationResolver:
     @staticmethod
-    def add_task(task_content: str) -> Task:
+    def add_task(task_content: str) -> schemas.Task:
         # TODO: Connect to the data layer
         pass
 
