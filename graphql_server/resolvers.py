@@ -18,7 +18,7 @@ class QueryResolver:
                     .offset(pagination.offset) \
                     .limit(pagination.limit)
 
-                tasks = query.all()
+            tasks = query.all()
         finally:
             db.close()
         return tasks
