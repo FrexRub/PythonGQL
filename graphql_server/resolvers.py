@@ -23,26 +23,52 @@ class QueryResolver:
             db.close()
         return tasks
 
-
-@staticmethod
-def get_task(task_id: ID) -> (schemas.Task | None):
-    # TODO: Connect to the data layer
-    pass
+    @staticmethod
+    def get_task(task_id: ID) -> (schemas.Task | None):
+        db = DBSession()
+        try:
+            task = db.query(models.Task) \
+                .filter(models.Task.id == task_id) \
+                .first()
+        finally:
+            db.close()
+        return task
 
 
 class MutationResolver:
     @staticmethod
     def add_task(task_content: str) -> schemas.Task:
-        # TODO: Connect to the data layer
-        pass
+        db = DBSession()
+        try:
+            new_task = models.Task(content=task_content)
+            db.add(new_task)
+            db.commit()
+            db.refresh(new_task)
+        finally:
+            db.close()
+        return new_task
 
     @staticmethod
-    def update_task(task_id: ID, task: any) -> (schemas.Task | None):
-        # TODO: update the task type
-        # TODO: Connect to the data layer
-        pass
+    def update_task(task_id: ID, task: schemas.UpdateTaskInput) -> (schemas.Task | None):
+        db = DBSession()
+        try:
+            modified_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+            modified_task.content = task.content if task.content is not None else modified_task.content
+            modified_task.is_done = task.is_done if task.is_done is not None else modified_task.is_done
+            db.commit()
+            db.refresh(modified_task)
+        finally:
+            db.close()
+        return modified_task
 
     @staticmethod
     def delete_task(task_id: ID) -> None:
-        # TODO: Connect to the data layer
-        pass
+        db = DBSession()
+        try:
+            deleted_task = db.query(models.Task) \
+                .filter(models.Task.id == task_id) \
+                .first()
+            db.delete(deleted_task)
+            db.commit()
+        finally:
+            db.close()

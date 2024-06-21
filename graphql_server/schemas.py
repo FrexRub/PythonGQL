@@ -1,4 +1,5 @@
 import strawberry
+from typing import Optional
 
 
 @strawberry.type
@@ -12,3 +13,9 @@ class Task:
 class PaginationInput:
     offset: int
     limit: int
+
+
+@strawberry.input
+class UpdateTaskInput:
+    content: Optional[str] = None
+    is_done: Optional[bool] = None
